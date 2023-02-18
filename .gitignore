@@ -15,9 +15,9 @@
 # vendor/
 src/
 src2/
-plugins/
+./plugins/
 logs/
 *.gconf
 *.list
-.env
+../OMSUbot/.env
 .idea/
