@@ -13,3 +13,11 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+src/
+src2/
+plugins/
+logs/
+*.gconf
+*.list
+.env
+.idea/
