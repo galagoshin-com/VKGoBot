@@ -19,7 +19,7 @@ import (
 	time2 "time"
 )
 
-const VERSION = "1.1.0-ALPHA1"
+const VERSION = "1.1.0-ALPHA2"
 
 var commandsEnabled = false
 

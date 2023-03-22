@@ -9,7 +9,7 @@ import (
 
 type Payload map[string]any
 
-func (payload Payload) sign() json.Json {
+func (payload Payload) Sign() json.Json {
 	return sign.SignPayload2Json(payload)
 }
 
