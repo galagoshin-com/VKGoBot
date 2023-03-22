@@ -47,6 +47,9 @@ func (chat UserChat) SendMessage(message Message) {
 	if message.Keyboard != nil {
 		values.Set("keyboard", string(message.Keyboard.GetJson()))
 	}
+	if message.Template != nil {
+		values.Set("template", string(message.Template.GetJson()))
+	}
 	request := requests.Request{
 		Method: requests.POST,
 		Url:    requests.URL("https://api.vk.com/method/messages.send"),
