@@ -13,32 +13,32 @@ type CallbackButton struct {
 	Payload Payload
 }
 
-func (button CallbackButton) getType() ButtonType {
-	return callbackType
+func (button CallbackButton) GetType() ButtonType {
+	return CallbackType
 }
 
-func (button CallbackButton) getRow() int {
+func (button CallbackButton) GetRow() int {
 	return button.Row
 }
 
-func (button CallbackButton) getColumn() int {
+func (button CallbackButton) GetColumn() int {
 	return button.Column
 }
 
-func (button CallbackButton) getText() string {
+func (button CallbackButton) GetText() string {
 	return button.Text
 }
 
-func (button CallbackButton) getPayload() Payload {
+func (button CallbackButton) GetPayload() Payload {
 	return button.Payload
 }
 
-func (button CallbackButton) getColor() Color {
+func (button CallbackButton) GetColor() Color {
 	logger.Error(errors.New("Callback button has no color"))
 	return ""
 }
 
-func (button CallbackButton) getLink() requests.URL {
+func (button CallbackButton) GetLink() requests.URL {
 	logger.Error(errors.New("Callback button has no link"))
 	return ""
 }
