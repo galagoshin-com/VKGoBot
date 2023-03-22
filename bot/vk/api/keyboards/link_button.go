@@ -13,32 +13,32 @@ type LinkButton struct {
 	Link   requests.URL
 }
 
-func (button LinkButton) getType() ButtonType {
-	return linkType
+func (button LinkButton) GetType() ButtonType {
+	return LinkType
 }
 
-func (button LinkButton) getPayload() Payload {
+func (button LinkButton) GetPayload() Payload {
 	logger.Error(errors.New("Link button has no payload"))
 	return make(map[string]any)
 }
 
-func (button LinkButton) getColor() Color {
+func (button LinkButton) GetColor() Color {
 	logger.Error(errors.New("Link button has no color"))
 	return ""
 }
 
-func (button LinkButton) getLink() requests.URL {
+func (button LinkButton) GetLink() requests.URL {
 	return button.Link
 }
 
-func (button LinkButton) getText() string {
+func (button LinkButton) GetText() string {
 	return button.Text
 }
 
-func (button LinkButton) getRow() int {
+func (button LinkButton) GetRow() int {
 	return button.Row
 }
 
-func (button LinkButton) getColumn() int {
+func (button LinkButton) GetColumn() int {
 	return button.Column
 }
