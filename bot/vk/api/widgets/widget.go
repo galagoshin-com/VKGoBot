@@ -5,7 +5,9 @@ import "github.com/Galagoshin/GoUtils/json"
 type WidgetType string
 
 const (
-	Table = WidgetType("table")
+	Table       = WidgetType("table")
+	List        = WidgetType("list")
+	CompactList = WidgetType("compact_list")
 )
 
 type Widget interface {

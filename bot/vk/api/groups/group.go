@@ -40,11 +40,10 @@ func (group Group) SetStatus(text string) {
 }
 
 func (group Group) SetWidget(widjet widgets.Widget) {
-	code := url.QueryEscape("return " + string(widjet.GetJson()) + ";")
 	values := url.Values{
 		"v":            {"5.103"},
 		"access_token": {tokens.GetWidgetToken()},
-		"code":         {code},
+		"code":         {"return " + string(widjet.GetJson()) + ";"},
 		"type":         {string(widjet.GetType())},
 	}
 	request := requests.Request{

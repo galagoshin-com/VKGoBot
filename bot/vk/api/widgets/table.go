@@ -57,7 +57,7 @@ func (widjet *WidgetTable) AddRow(row TableRow) *WidgetTable {
 	return widjet
 }
 
-func (widjet *WidgetTable) getType() WidgetType {
+func (widjet *WidgetTable) GetType() WidgetType {
 	return Table
 }
 
