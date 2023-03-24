@@ -2,6 +2,7 @@ package groups
 
 import (
 	"errors"
+	"fmt"
 	"github.com/Galagoshin/GoLogger/logger"
 	"github.com/Galagoshin/GoUtils/json"
 	"github.com/Galagoshin/GoUtils/requests"
@@ -16,6 +17,7 @@ func (group Group) SetStatus(text string) {
 	values := url.Values{
 		"v":            {"5.103"},
 		"access_token": {tokens.GetUserToken()},
+		"group_id":     {fmt.Sprintf("%d", group)},
 		"text":         {text},
 	}
 	request := requests.Request{
