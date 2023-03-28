@@ -33,7 +33,7 @@ func (widget *WidgetList) Init() {
 	data := make(map[string]any)
 	data["title"] = widget.Title
 	data["title_url"] = widget.TitleUrl
-	data["title_conter"] = widget.TitleCounter
+	data["title_counter"] = widget.TitleCounter
 	data["more"] = widget.FooterText
 	data["more_url"] = widget.FooterUrl
 	data["rows"] = make([]any, 6)

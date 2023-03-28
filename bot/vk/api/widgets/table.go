@@ -1,6 +1,7 @@
 package widgets
 
 import (
+	"fmt"
 	"github.com/Galagoshin/GoLogger/logger"
 	"github.com/Galagoshin/GoUtils/requests"
 	"github.com/Galagoshin/VKGoBot/bot/vk/api/attachments"
@@ -50,7 +51,7 @@ func (widjet *WidgetTable) AddRow(row TableRow) *WidgetTable {
 		data["body"].([]any)[row.Index].([]any)[column.Index].(map[string]any)["text"] = column.Text
 		data["body"].([]any)[row.Index].([]any)[column.Index].(map[string]any)["url"] = column.Url
 		if column.Icon.OwnerId != 0 {
-			data["body"].([]any)[row.Index].([]any)[column.Index].(map[string]any)["icon_id"] = column.Icon.BuildString()
+			data["body"].([]any)[row.Index].([]any)[column.Index].(map[string]any)["icon_id"] = fmt.Sprintf("id%d", column.Icon.OwnerId)
 		}
 	}
 	widjet.setData(data)
