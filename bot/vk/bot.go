@@ -4,7 +4,9 @@ import (
 	"errors"
 	"github.com/Galagoshin/GoLogger/logger"
 	"github.com/Galagoshin/GoUtils/configs"
+	"github.com/Galagoshin/GoUtils/events"
 	"github.com/Galagoshin/GoUtils/files"
+	events2 "github.com/Galagoshin/VKGoBot/bot/events"
 	"github.com/Galagoshin/VKGoBot/bot/vk/api/groups"
 	"github.com/Galagoshin/VKGoBot/bot/vk/api/handler"
 	tokens2 "github.com/Galagoshin/VKGoBot/bot/vk/api/tokens"
@@ -106,7 +108,7 @@ func Init() {
 }
 
 func Stop() {
-	//TODO
+	events.CallAllEvents(events2.StopBotEvent)
 }
 
 func Run() {
@@ -117,6 +119,7 @@ func Run() {
 			Run()
 		}
 	}()
+	events.CallAllEvents(events2.StartBotEvent)
 	vkhandler.Run()
 }
 

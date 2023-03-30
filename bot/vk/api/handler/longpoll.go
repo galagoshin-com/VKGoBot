@@ -8,9 +8,12 @@ import (
 	"github.com/Galagoshin/GoUtils/json"
 	"github.com/Galagoshin/GoUtils/requests"
 	events2 "github.com/Galagoshin/VKGoBot/bot/events"
+	"github.com/Galagoshin/VKGoBot/bot/vk/api/attachments"
 	"github.com/Galagoshin/VKGoBot/bot/vk/api/chats"
+	"github.com/Galagoshin/VKGoBot/bot/vk/api/comments"
 	"github.com/Galagoshin/VKGoBot/bot/vk/api/groups"
 	"github.com/Galagoshin/VKGoBot/bot/vk/api/keyboards"
+	"github.com/Galagoshin/VKGoBot/bot/vk/api/likes"
 	"github.com/Galagoshin/VKGoBot/bot/vk/api/tokens"
 	"github.com/Galagoshin/VKGoBot/bot/vk/api/users"
 	"net/url"
@@ -171,6 +174,74 @@ func (longpoll *LongPoll) Run() {
 							events.CallAllEvents(events2.MessageCallbackEvent, callback)
 						}
 					}
+				} else if longpoll.isNewLike(msgs, msg) {
+					data := longpoll.getObject(msgs[msg].(map[string]any))
+					var liked attachments.Attachment
+					if attachments.AttachmentType(data["object_type"].(string)) == attachments.PhotoType {
+						liked = &attachments.Image{
+							OwnerId: int(data["object_owner_id"].(float64)),
+							Id:      uint(data["object_id"].(float64)),
+						}
+					} else if attachments.AttachmentType(data["object_type"].(string)) == attachments.PostType {
+						liked = &attachments.Post{
+							OwnerId: int(data["object_owner_id"].(float64)),
+							Id:      uint(data["object_id"].(float64)),
+						}
+					}
+					like := likes.Like{
+						Liker:       users.User(data["liker_id"].(float64)),
+						LikedObject: liked,
+					}
+					events.CallAllEvents(events2.AddLikeEvent, like)
+				} else if longpoll.isNewComment(msgs, msg) {
+					data := longpoll.getObject(msgs[msg].(map[string]any))
+					obj := &attachments.Post{
+						OwnerId: int(data["post_owner_id"].(float64)),
+						Id:      uint(data["post_id"].(float64)),
+					}
+					comment := comments.Comment{
+						Commentator:   comments.Commentator(data["from_id"].(float64)),
+						CommentObject: obj,
+						Text:          data["text"].(string),
+						Date:          int64(data["date"].(float64)),
+					}
+					events.CallAllEvents(events2.AddCommentEvent, comment)
+				} else if longpoll.isRemoveLike(msgs, msg) {
+					data := longpoll.getObject(msgs[msg].(map[string]any))
+					var liked attachments.Attachment
+					if attachments.AttachmentType(data["object_type"].(string)) == attachments.PhotoType {
+						liked = &attachments.Image{
+							OwnerId: int(data["object_owner_id"].(float64)),
+							Id:      uint(data["object_id"].(float64)),
+						}
+					} else if attachments.AttachmentType(data["object_type"].(string)) == attachments.PostType {
+						liked = &attachments.Post{
+							OwnerId: int(data["object_owner_id"].(float64)),
+							Id:      uint(data["object_id"].(float64)),
+						}
+					}
+					like := likes.Like{
+						Liker:       users.User(data["liker_id"].(float64)),
+						LikedObject: liked,
+					}
+					events.CallAllEvents(events2.DeleteLikeEvent, like)
+				} else if longpoll.isRemoveComment(msgs, msg) {
+					data := longpoll.getObject(msgs[msg].(map[string]any))
+					obj := &attachments.Post{
+						OwnerId: int(data["owner_id"].(float64)),
+						Id:      uint(data["post_id"].(float64)),
+					}
+					comment := comments.Comment{
+						Commentator:   comments.Commentator(data["deleter_id"].(float64)),
+						CommentObject: obj,
+					}
+					events.CallAllEvents(events2.DeleteCommentEvent, comment)
+				} else if longpoll.isGroupJoined(msgs, msg) {
+					data := longpoll.getObject(msgs[msg].(map[string]any))
+					if data["join_type"].(string) == "join" {
+						user := users.User(data["user_id"].(float64))
+						events.CallAllEvents(events2.GroupJoinEvent, user)
+					}
 				}
 			}
 			if first {
@@ -233,6 +304,51 @@ func (longpoll *LongPoll) isMessageEvent(response []any, index int) bool {
 	if len(response) != 0 {
 		md := response[index].(map[string]any)
 		return md["type"] == "message_event"
+	} else {
+		return false
+	}
+}
+
+func (longpoll *LongPoll) isNewComment(response []any, index int) bool {
+	if len(response) != 0 {
+		md := response[index].(map[string]any)
+		return md["type"] == "wall_reply_new"
+	} else {
+		return false
+	}
+}
+
+func (longpoll *LongPoll) isNewLike(response []any, index int) bool {
+	if len(response) != 0 {
+		md := response[index].(map[string]any)
+		return md["type"] == "like_add"
+	} else {
+		return false
+	}
+}
+
+func (longpoll *LongPoll) isRemoveLike(response []any, index int) bool {
+	if len(response) != 0 {
+		md := response[index].(map[string]any)
+		return md["type"] == "like_remove"
+	} else {
+		return false
+	}
+}
+
+func (longpoll *LongPoll) isRemoveComment(response []any, index int) bool {
+	if len(response) != 0 {
+		md := response[index].(map[string]any)
+		return md["type"] == "wall_reply_delete"
+	} else {
+		return false
+	}
+}
+
+func (longpoll *LongPoll) isGroupJoined(response []any, index int) bool {
+	if len(response) != 0 {
+		md := response[index].(map[string]any)
+		return md["type"] == "group_join"
 	} else {
 		return false
 	}

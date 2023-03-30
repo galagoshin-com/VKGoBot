@@ -9,7 +9,7 @@ type Image struct {
 }
 
 func (image *Image) GetType() AttachmentType {
-	return Photo
+	return PhotoType
 }
 
 func (image *Image) GetOwnerId() int {

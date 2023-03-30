@@ -11,5 +11,6 @@ type Attachment interface {
 }
 
 const (
-	Photo = AttachmentType("photo")
+	PhotoType = AttachmentType("photo")
+	PostType  = AttachmentType("post")
 )

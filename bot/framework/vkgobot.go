@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"github.com/Galagoshin/GoLogger/logger"
 	"github.com/Galagoshin/GoUtils/configs"
+	"github.com/Galagoshin/GoUtils/events"
 	"github.com/Galagoshin/GoUtils/files"
 	"github.com/Galagoshin/GoUtils/time"
+	events2 "github.com/Galagoshin/VKGoBot/bot/events"
 	"github.com/Galagoshin/VKGoBot/bot/plugins"
 	"github.com/Galagoshin/VKGoBot/bot/vk"
 	"github.com/Galagoshin/VKGoBot/bot/vk/api/sign"
@@ -65,6 +67,7 @@ func IsUnderDocker() bool {
 
 func HotReload() {
 	logger.Print(fmt.Sprintf("HotReload finished (%f s.)", time.MeasureExecution(func() {
+
 		plugins.DisableAllPlugins()
 		Config = &configs.Config{Name: "vkgo"}
 		BuildConfig.Init(map[string]any{
@@ -87,6 +90,7 @@ func HotReload() {
 		vk.Config = &configs.Config{Name: "bot"}
 
 		vk.Stop()
+		events.CallAllEvents(events2.HotReloadEvent)
 
 		secretKey, secretError := Config.Get("payload-secret-key")
 		if !secretError {
@@ -121,6 +125,7 @@ func Shutdown(restart bool) {
 	} else {
 		logger.Print("Framework is shuting down...")
 	}
+	events.CallAllEvents(events2.StopApplicationEvent)
 	plugins.DisableAllPlugins()
 	err := vk.Config.Save()
 	if err != nil {

@@ -4,7 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Galagoshin/GoLogger/logger"
+	"github.com/Galagoshin/GoUtils/events"
 	"github.com/Galagoshin/GoUtils/files"
+	events2 "github.com/Galagoshin/VKGoBot/bot/events"
 	"path/filepath"
 	"plugin"
 )
@@ -71,6 +73,7 @@ func EnableAllPlugins() {
 			if plug.OnEnable != nil {
 				plug.OnEnable()
 			}
+			events.CallAllEvents(events2.EnablePluginEvent, plug)
 			version := ""
 			if plug.Version != "" {
 				version = "v" + plug.Version
@@ -89,6 +92,7 @@ func DisableAllPlugins() {
 			if plug.OnDisable != nil {
 				plug.OnDisable()
 			}
+			events.CallAllEvents(events2.DisablePluginEvent, plug)
 			version := ""
 			if plug.Version != "" {
 				version = "v" + plug.Version
